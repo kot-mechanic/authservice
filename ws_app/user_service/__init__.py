@@ -21,16 +21,19 @@ def create_users_blueprint(db, upload_path):
             if not request.is_json:
                 return jsonify({'error': 'Body is not json.', 'success': None}), 403
             json = request.get_json()
-            print(json)
+            # print(json)
             json['reg_date'] = int(time.time())
+            for item in json['socnet']:
+                json_socnet = item
             # print(json)
             u = Users.from_json(json)
-            print(u.socnet)
-            u.socnet.append(Socnet())
+            # u.socnet.append(Socnet())
+            u.socnet.append(Socnet.from_json(json_socnet))
             try:
                 # print('Пытаюсь записать в БД')
                 db.session.add(u)
                 db.session.commit()
+                # print(u.user_id)
             except Exception as e:
                 # print('Не удалось записать в БД')
                 return jsonify({'error': 'An user with a same nickname exists.', 'success': None}), 403

@@ -18,6 +18,9 @@ a = {
     ]
 }
 
-print(a)
-u = Users.from_json(a)
-print(u.password)
+# print(a)
+# u = Users.from_json(a)
+# print(u.socnet)
+
+for item in a['socnet']:
+    print(item)
