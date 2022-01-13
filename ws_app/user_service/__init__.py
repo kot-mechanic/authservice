@@ -44,7 +44,9 @@ def create_users_blueprint(db, upload_path):
     @auth.login_required
     def user(user_nickname):
         from ws_app.model.models import Users
+        from ws_app.model.models import Socnet
         u = Users.query.filter_by(nickname=user_nickname)
+        u1 = Users.query.filter_by(nickname=user_nickname).first()
         if not u.first():
             return jsonify({'error': 'User not found.', 'success': None}), 404
         if request.method == 'DELETE':
@@ -63,6 +65,14 @@ def create_users_blueprint(db, upload_path):
             if not request.is_json:
                 return jsonify({'error': 'Body is not json.', 'success': None}), 403
             json = request.get_json()
+            if 'active' in json:
+                json['delete_date'] = int(time.time())
+            if 'socnet' in json:
+                for item in json['socnet']:
+                    json_socnet = item
+                    socnet = Socnet.query.filter_by(user_id=u1.user_id)
+                    del json['socnet']
+                    socnet.update(json_socnet)
             u.update(json)
             db.session.commit()
             return jsonify(u.first().to_dict()), 200
@@ -110,7 +120,6 @@ def create_users_blueprint(db, upload_path):
                 db.session.add(p)
                 db.session.commit()
             return jsonify([p.to_dict() for p in Pic.query.filter_by(user_id=u.user_id).all()]), 200
-
         return jsonify([p.to_dict() for p in pics]), 404
 
     @bp.route('/<user_nickname>/pic', methods=['POST', 'GET', 'DELETE'])

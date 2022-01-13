@@ -22,5 +22,10 @@ a = {
 # u = Users.from_json(a)
 # print(u.socnet)
 
-for item in a['socnet']:
-    print(item)
+# for item in a['socnet']:
+#     print(item)
+
+if 'socnet' in a:
+    print(a['socnet'])
+    del a['socnet']
+    print(a)
