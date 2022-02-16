@@ -1,31 +1,6 @@
-from ws_app.model.models import Users
-from ws_app.model.models import Socnet
+import requests
 
-a = {
-    "nickname": "TestUser01",
-    "name": "Юзер Юзеров Юзерович",
-    "password": "mc451b84dab4fe148ba887bebf65fe2dd",
-    "mail1": "TestUser",
-    "phone1": "1234567",
-    "socnet": [
-        {
-            "vk": "testVK",
-            "fb": "",
-            "insta": "",
-            "telegram": "",
-            "user_id": 19
-        }
-    ]
-}
+url = 'https://raw.githubusercontent.com/kot-mechanic/mongodb_otus/main/screen/222222222222222222.png'
+r = requests.get(url, allow_redirects=True)
 
-# print(a)
-# u = Users.from_json(a)
-# print(u.socnet)
-
-# for item in a['socnet']:
-#     print(item)
-
-if 'socnet' in a:
-    print(a['socnet'])
-    del a['socnet']
-    print(a)
+open('D:\\work\\poslanie\\authservice\\ws_app\\tmp\\TestUser\\1.png', 'wb').write(r.content)

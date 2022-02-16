@@ -1,5 +1,6 @@
 import os
 import time
+import requests
 import base64
 
 from flask import (
@@ -102,6 +103,31 @@ def create_users_blueprint(db, upload_path):
                 return jsonify(socnet[0].to_dict()), 200
             return jsonify({}), 200
 
+    @bp.route('/pic', methods=['POST', 'DELETE'])
+    @auth.login_required
+    def pic_from_url():
+        from ws_app.model.models import Users
+        from ws_app.model.models import Pic
+        if request.method == 'POST':
+            if not request.is_json:
+                return jsonify({'error': 'Body is not json.', 'success': None}), 403
+            json = request.get_json()
+            # print(json['nickname'])
+            # print(json['pic_url'])
+            r = requests.get(json['pic_url'], allow_redirects=True)
+            filename = secure_filename('%s_' % int(time.time()))+'.jpg'
+            full_path = '%s/%s/' % (upload_path, json['nickname'])
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            open(full_path+'\\'+filename, 'wb').write(r.content)
+            u = Users.query.filter_by(nickname=json['nickname']).first()
+            p = Pic(user_id=u.user_id, filepath=filename, ava=False)
+            db.session.add(p)
+            db.session.commit()
+            # r.save(os.path.join(full_path, filename))
+            # open('D:\\work\\poslanie\\authservice\\ws_app\\tmp\\TestUser\\1.png', 'wb').write(r.content)
+            return "OK", 200
+
+
     @bp.route('/<user_nickname>/pics', methods=['POST', 'GET'])
     @auth.login_required
     def user_pics(user_nickname):
@@ -123,7 +149,7 @@ def create_users_blueprint(db, upload_path):
             return jsonify([p.to_dict() for p in Pic.query.filter_by(user_id=u.user_id).all()]), 200
         return jsonify([p.to_dict() for p in pics]), 404
 
-    @bp.route('/<user_nickname>/pic', methods=['POST', 'GET', 'DELETE'])
+    @bp.route('/<user_nickname>/pic', methods=['POST', 'GET', 'DELETE', 'PUT'])
     @auth.login_required
     def user_pic(user_nickname):
         from ws_app.model.models import Users
