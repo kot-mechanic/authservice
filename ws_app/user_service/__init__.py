@@ -112,9 +112,9 @@ def create_users_blueprint(db, upload_path):
             if not request.is_json:
                 return jsonify({'error': 'Body is not json.', 'success': None}), 403
             json = request.get_json()
-            # print(json['nickname'])
-            # print(json['pic_url'])
             r = requests.get(json['pic_url'], allow_redirects=True)
+            # print(r.headers)
+            # print(r.headers['Content-Type'])
             filename = secure_filename('%s_' % int(time.time()))+'.jpg'
             full_path = '%s/%s/' % (upload_path, json['nickname'])
             os.makedirs(os.path.dirname(full_path), exist_ok=True)
@@ -123,9 +123,7 @@ def create_users_blueprint(db, upload_path):
             p = Pic(user_id=u.user_id, filepath=filename, ava=False)
             db.session.add(p)
             db.session.commit()
-            # r.save(os.path.join(full_path, filename))
-            # open('D:\\work\\poslanie\\authservice\\ws_app\\tmp\\TestUser\\1.png', 'wb').write(r.content)
-            return "OK", 200
+            return jsonify(p.to_dict()), 200
 
 
     @bp.route('/<user_nickname>/pics', methods=['POST', 'GET'])
