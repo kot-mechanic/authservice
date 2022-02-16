@@ -9,8 +9,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://users:xNMqdMcGdPWhMKrc7P31@192.168.42.101/users'
-    app.config['UPLOAD_FOLDER'] = '/opt/ws_app/tmp'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://users:users@192.168.42.134/users'
+    app.config['UPLOAD_FOLDER'] = 'D:\\work\\poslanie\\app\\ws_app\\tmp'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     app.register_blueprint(create_auth_blueprint(), url_prefix='/api/v1/auth')

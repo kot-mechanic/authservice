@@ -1,5 +1,6 @@
 import os
 import time
+import base64
 
 from flask import (
     Blueprint, request, jsonify, send_file
