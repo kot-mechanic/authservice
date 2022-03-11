@@ -10,6 +10,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://users:users@192.168.42.134/users'
+    app.config['SQLALCHEMY_BINDS'] = {'authlog_db': 'postgres://authlogowner:UTyt0Dk9HNXz6H61ekMQ@192.168.42.134/authlog'}
     app.config['UPLOAD_FOLDER'] = 'D:\\work\\poslanie\\authservice\\ws_app\\tmp'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)

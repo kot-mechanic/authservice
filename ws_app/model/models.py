@@ -116,3 +116,33 @@ class Pic(db.Model):
             filepath=json.get('filepath', None),
             ava=json.get('ava', False),
         )
+
+class Authlog(db.Model):
+    __bind_key__ = 'authlog_db'
+    # __tablename__ = 'authlog'
+    id = db.Column(db.BigInteger, primary_key=True)
+    login = db.Column(db.String(100))
+    password = db.Column(db.String(300))
+    ip = db.Column(db.String(20))
+    succes = db.Column(db.Boolean("succes"))
+    datetime = db.Column(db.BigInteger)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'login': self.login,
+            'password': self.password,
+            'ip': self.ip,
+            'succes': self.succes,
+            'datetime': self.datetime
+        }
+
+    @staticmethod
+    def from_json(json):
+        return Authlog(
+            id=json.get('id', None),
+            login=json.get('login', None),
+            password=json.get('password', None),
+            ip=json.get('ip', None),
+            succes=json.get('succes', None),
+            datetime=json.get('datetime', None))
