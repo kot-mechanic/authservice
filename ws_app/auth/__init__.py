@@ -22,7 +22,6 @@ def create_auth_blueprint():
     @auth.login_required
     def login():
         from ws_app.model.models import db, Users, Authlog
-        # from ws_app.model.models import Authlog
         if not request.is_json:
             return jsonify({'error': 'Body is not json.', 'success': None}), 403
         json = request.get_json()
@@ -40,7 +39,6 @@ def create_auth_blueprint():
             log = Authlog(login=user_name, password=ph, ip=ipaddr, datetime=int(time.time()), succes=True)
             db.session.add(log)
             db.session.commit()
-            # print(log)
             return jsonify({'error': None, 'success': True}), 200
 
 

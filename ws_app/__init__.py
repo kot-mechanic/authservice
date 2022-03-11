@@ -2,6 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from ws_app.auth import create_auth_blueprint
 from ws_app.user_service import create_users_blueprint
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from ws_app.utils.delete_old_logs import clear_old_logs
 
 db = SQLAlchemy()
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -18,3 +21,11 @@ def create_app():
     app.register_blueprint(create_users_blueprint(db, app.config['UPLOAD_FOLDER']), url_prefix='/api/v1/users')
 
     return app
+
+# def sensor():
+#     """ Function for test purposes. """
+#     print("Scheduler is alive!")
+
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(clear_old_logs, 'interval', seconds=86400) # запускается раз в сутки (86400 секунд)
+sched.start()
