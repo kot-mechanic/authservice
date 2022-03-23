@@ -191,6 +191,16 @@ def create_users_blueprint(db, upload_path):
             except FileNotFoundError:
                 return jsonify({'error': 'File not found.', 'success': None}), 404
 
+    @bp.route('/authlog/<user_nickname>', methods=['GET'])
+    @auth.login_required
+    def get_authlog(user_nickname):
+        from ws_app.model.models import Authlog
+        log = Authlog.query.filter_by(login=user_nickname).all()
+        if not log:
+            return jsonify({'error': 'Log not found.', 'success': None}), 404
+        return jsonify([l.to_dict() for l in log]), 200
+
+
     def allowed_file(filename):
         from ws_app import ALLOWED_EXTENSIONS
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
